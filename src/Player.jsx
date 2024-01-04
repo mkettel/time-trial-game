@@ -3,6 +3,7 @@ import { useFrame } from "@react-three/fiber"
 import { useKeyboardControls } from "@react-three/drei"
 import { useRef, useEffect, useState } from "react"
 import * as THREE from "three"
+import useGame from "./stores/useGame"
 
 
 export default function Player()
@@ -16,6 +17,12 @@ export default function Player()
 
   const [ smoothedCameraPosition ] = useState(() => new THREE.Vector3(10, 10, 10))
   const [ smoothedCameraTarget ] = useState(() => new THREE.Vector3())
+
+  // Getting the functions from the store
+  const start = useGame((state) => state.start)
+  const end = useGame((state) => state.end)
+  const restart = useGame((state) => state.restart)
+  const blocksCount = useGame((state) => state.blocksCount)
 
   // Jumping with rapier raycast
   const jump = () =>
@@ -31,8 +38,28 @@ export default function Player()
     }
   }
 
+  // Restarting the Player
+  const reset = () =>
+  {
+    body.current.setTranslation({ x: 0, y: 1, z: 0 }) // reset the ball's position
+    body.current.setLinvel({ x: 0, y: 0, z: 0 }) // reset the ball's velocity
+    body.current.setAngvel({ x: 0, y: 0, z: 0 }) // reset the ball's angular velocity
+  }
+
   useEffect(() =>
   {
+    // subscribe to store
+    const unsubscribeReset = useGame.subscribe(
+      (state) => state.phase, // selector function
+      (value) =>
+      {
+        if (value === 'ready')
+        {
+          reset()
+        }
+      }
+    )
+
     const unsubscribeJump = subscribeKeys(
       (state) =>
       {
@@ -46,10 +73,19 @@ export default function Player()
         }
       })
 
-      // unsubscribe from the jump function to clean up the event listener
+      const unsubscribeAny = subscribeKeys(
+        () =>
+        {
+          start() // second function listens to any key
+        }
+      )
+
+      // unsubscribe function to clean up the event listener
       return () =>
       {
         unsubscribeJump()
+        unsubscribeAny()
+        unsubscribeReset()
       }
   }, [])
 
@@ -118,6 +154,19 @@ export default function Player()
 
     state.camera.position.copy(smoothedCameraPosition) // set the camera position
     state.camera.lookAt(smoothedCameraTarget) // set the camera target
+
+    /**
+     * Phases
+     */
+    if (bodyPosition.z < -(blocksCount * 4 + 2))
+    {
+      end()
+    }
+
+    if (bodyPosition.y < -4)
+    {
+      restart()
+    }
 
   })
 

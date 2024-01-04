@@ -64,7 +64,9 @@ body,
   padding-top: 10px;
   pointer-events: auto;
   cursor: pointer;
+  transition: all 0.333s ease;
 }
+
 
 /**
  * Controls

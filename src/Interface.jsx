@@ -1,4 +1,6 @@
 import { useKeyboardControls } from "@react-three/drei"
+import useGame from "./stores/useGame"
+import { useEffect } from "react"
 
 export default function Interface() {
 
@@ -9,6 +11,10 @@ export default function Interface() {
   const left = useKeyboardControls((state) => state.left)
   const jump = useKeyboardControls((state) => state.jump)
 
+  // get the restart function from the store
+  const restart = useGame((state) => state.restart)
+  const phase = useGame((state) => state.phase)
+
 
   return <div className="interface">
     {/* Time */}
@@ -16,7 +22,7 @@ export default function Interface() {
 
 
     {/* Restart */}
-    <div className="restart">Restart</div>
+    {phase === 'ended' && <div onClick={restart} className="restart">Restart</div>}
 
     {/* Controls */}
     <div className="controls">
