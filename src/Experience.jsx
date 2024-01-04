@@ -9,6 +9,7 @@ export default function Experience()
 {
   // (selector) get the blocksCount from the store
   const blocksCount = useGame((state) => state.blocksCount)
+  const blocksSeed = useGame((state) => state.blocksSeed)
 
     return <>
 

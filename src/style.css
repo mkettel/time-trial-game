@@ -15,7 +15,7 @@ body,
     left: 0;
     width: 100%;
     height: 100%;
-    background: ivory;
+    background: #BADEFC;
 }
 
 
@@ -64,7 +64,6 @@ body,
   padding-top: 10px;
   pointer-events: auto;
   cursor: pointer;
-  transition: all 0.333s ease;
 }
 
 
@@ -74,9 +73,10 @@ body,
  .controls
  {
      position: absolute;
-     bottom: 10%;
+     bottom: 5%;
      left: 0;
      width: 100%;
+     display: none;
  }
 
  .controls .raw

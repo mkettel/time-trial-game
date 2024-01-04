@@ -1,8 +1,16 @@
 import { useKeyboardControls } from "@react-three/drei"
 import useGame from "./stores/useGame"
-import { useEffect } from "react"
+import { useRef, useEffect } from "react"
+import { addEffect } from "@react-three/fiber";
 
 export default function Interface() {
+
+  // create a ref for the time
+  const time = useRef();
+
+  // get the restart and phases from the store
+  const restart = useGame((state) => state.restart)
+  const phase = useGame((state) => state.phase)
 
   // subscribe to the keyboard controls and get the current state
   const forward = useKeyboardControls((state) => state.forward)
@@ -11,14 +19,40 @@ export default function Interface() {
   const left = useKeyboardControls((state) => state.left)
   const jump = useKeyboardControls((state) => state.jump)
 
-  // get the restart function from the store
-  const restart = useGame((state) => state.restart)
-  const phase = useGame((state) => state.phase)
+  // subscribe to the time and update the time
+  useEffect(() =>
+  {
+    const unsubscribeEffect = addEffect(() =>
+    {
+      // get the state
+      const state = useGame.getState()
+
+      let elapsedTime = 0
+
+      if (state.phase === 'playing')
+      {
+        elapsedTime = Date.now() - state.startTime
+      } else if (state.phase === 'ended')
+      {
+        elapsedTime = state.endTime - state.startTime
+      }
+
+      elapsedTime /= 1000
+      elapsedTime = elapsedTime.toFixed(2)
+
+      if (time.current)
+      {
+        time.current.textContent = elapsedTime
+      }
+    })
+
+    return () => unsubscribeEffect()
+  }, [])
 
 
   return <div className="interface">
     {/* Time */}
-    <div className="time">0.00</div>
+    <div ref={time} className="time">0.00</div>
 
 
     {/* Restart */}

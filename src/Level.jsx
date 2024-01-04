@@ -44,7 +44,7 @@ export function BlockEnd({ position = [ 0, 0, 0 ] })
       geometry={ boxGeometry }
       material={ startEndMat }
       position={[ 0, -0.05, 0 ]}
-      scale={[ 4, 0.3, 4 ]}
+      scale={[ 4, 0.4, 4 ]}
       receiveShadow
       />
       <RigidBody
@@ -223,7 +223,7 @@ function Bounds({ length = 1 })
         position={[0, 0.75, - (length * 4) + 2]}
         geometry={ boxGeometry }
         material={ wallMat }
-        scale={[4.6, 1.5, 0.3]}
+        scale={[4.6, 1.9, 0.3]}
         receiveShadow
       />
       <CuboidCollider
@@ -237,7 +237,7 @@ function Bounds({ length = 1 })
 }
 
 
-export function Level({ count = 6, types = [BlockSpinner, BlockVertical, BlockAxe]}) {
+export function Level({ count = 6, types = [BlockSpinner, BlockVertical, BlockAxe], seed = 0}) {
 
   // Random blocks generator
   const blocks = useMemo(() =>
@@ -250,7 +250,7 @@ export function Level({ count = 6, types = [BlockSpinner, BlockVertical, BlockAx
       blocks.push(type);
     }
     return blocks
-  }, [ count, types ])
+  }, [ count, types, seed ])
 
   return <>
         <BlockStart position={[0, 0, 0]} />
