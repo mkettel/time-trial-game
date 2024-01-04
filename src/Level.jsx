@@ -226,6 +226,12 @@ function Bounds({ length = 1 })
         scale={[4.6, 1.5, 0.3]}
         receiveShadow
       />
+      <CuboidCollider
+        args={[ 2, 0.1, 2 * length ]}
+        position={[0, -0.1, - (length * 2) + 2]}
+        restitution={0.2}
+        friction={1}
+      />
     </RigidBody>
   </>
 }
