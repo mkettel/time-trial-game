@@ -38,7 +38,7 @@ body,
 */
 .time {
   position: absolute;
-  top: 15%;
+  top: 10%;
   left: 0;
   width: 100%;
   color: #fff;
@@ -64,6 +64,11 @@ body,
   padding-top: 10px;
   pointer-events: auto;
   cursor: pointer;
+  transition: .3s all;
+}
+.restart:hover {
+  background: rgba(0, 0, 0, 0.449);
+  transition: .3s all;
 }
 
 
@@ -73,10 +78,10 @@ body,
  .controls
  {
      position: absolute;
-     bottom: 5%;
-     left: 0;
+     bottom: 3%;
+     right: 0;
      width: 100%;
-     display: none;
+     /* display: none; */
  }
 
  .controls .raw
@@ -87,8 +92,8 @@ body,
 
  .controls .key
  {
-     width: 40px;
-     height: 40px;
+     width: 30px;
+     height: 30px;
      margin: 4px;
      border: 2px solid #ffffff;
      background: #ffffff44;
@@ -96,10 +101,11 @@ body,
 
  .controls .key.large
  {
-     width: 144px;
+     width: 114px;
  }
 
  .controls .key.active
  {
      background: #ffffff99;
+     transition: .3s ease-in-out;
  }
