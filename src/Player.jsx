@@ -1,7 +1,8 @@
 import { RigidBody, useRapier } from "@react-three/rapier"
 import { useFrame } from "@react-three/fiber"
 import { useKeyboardControls } from "@react-three/drei"
-import { useRef, useEffect } from "react"
+import { useRef, useEffect, useState } from "react"
+import * as THREE from "three"
 
 
 export default function Player()
@@ -12,6 +13,9 @@ export default function Player()
   const [ subscribeKeys, getKeys ] = useKeyboardControls()
   const { rapier, world } = useRapier()
   const rapierWorld = world
+
+  const [ smoothedCameraPosition ] = useState(() => new THREE.Vector3(10, 10, 10))
+  const [ smoothedCameraTarget ] = useState(() => new THREE.Vector3())
 
   // Jumping with rapier raycast
   const jump = () =>
@@ -85,6 +89,36 @@ export default function Player()
 
     body.current.applyImpulse(impulse)
     body.current.applyTorqueImpulse(torque)
+
+    /**
+     * Camera
+     * 1. Get the position of the ball
+     * 2. create a vector for the camera position
+     * 3. copy the position of the ball to the vector for the camera to set the camera position
+     * 4. move the camera back & up
+     * 5. create a vector for the camera target
+     * 6. copy the position of the ball to the vector for the camera target to set the camera target
+     * 7. looks slightly above the ball
+     * 8. lerp the camera position & target by using useState with Vector3
+     * 9. set the camera position & target to the state of the camera
+     */
+    const bodyPosition = body.current.translation() // get the position of the ball
+
+    const cameraPosition = new THREE.Vector3() // create a new vector
+    cameraPosition.copy(bodyPosition) // copy the position of the ball to the vector for the camera
+    cameraPosition.z += 2.25 // move the camera back
+    cameraPosition.y += 0.65 // move the camera up
+
+    const cameraTarget = new THREE.Vector3() // create a new vector for the camera target
+    cameraTarget.copy(bodyPosition) // copy the position of the ball to the vector for the camera target
+    cameraTarget.y += 0.25 // looks slightly above the ball
+
+    smoothedCameraPosition.lerp(cameraPosition, 5 * delta) // lerp the camera position and multiply by delta to make it smooth on all computers
+    smoothedCameraTarget.lerp(cameraTarget, 5 * delta) // lerp the camera target
+
+    state.camera.position.copy(smoothedCameraPosition) // set the camera position
+    state.camera.lookAt(smoothedCameraTarget) // set the camera target
+
   })
 
   return <>
