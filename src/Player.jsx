@@ -4,6 +4,9 @@ import { useKeyboardControls } from "@react-three/drei"
 import { useRef, useEffect, useState } from "react"
 import * as THREE from "three"
 import useGame from "./stores/useGame"
+import { NodeToyMaterial } from "@nodetoy/react-nodetoy"
+import { data as shaderData } from "./shaders/shader.js"
+import { data as rainbowShader } from "./shaders/rainbow-shader.js"
 
 
 export default function Player()
@@ -171,10 +174,11 @@ export default function Player()
   })
 
   return <>
+
     <RigidBody
       ref={body}
       canSleep={false}
-      position={[ 0, 1, 0 ]}
+      position={[ 0, 2, 0 ]}
       colliders="ball"
       restitution={0.2}
       friction={1}
@@ -183,7 +187,8 @@ export default function Player()
       >
       <mesh castShadow>
         <sphereGeometry args={[ 0.3, 52 ]} />
-        <meshStandardMaterial flatShading color={ 'mediumpurple' } />
+        {/* <meshStandardMaterial color="mediumpurple" flatShading /> */}
+        <NodeToyMaterial data={rainbowShader} />
       </mesh>
     </RigidBody>
   </>

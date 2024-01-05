@@ -46,7 +46,7 @@ export default function Interface() {
       }
     })
 
-    return () => unsubscribeEffect()
+    return () => unsubscribeEffect() // unsubscribe when the component unmounts
   }, [])
 
 
