@@ -3,6 +3,9 @@ import { CuboidCollider, RigidBody } from '@react-three/rapier'
 import { useMemo, useRef, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { useGLTF } from '@react-three/drei';
+import { NodeToyMaterial } from "@nodetoy/react-nodetoy"
+import { data as woodShader } from "./shaders/wood-shader.js"
+
 
 // Creating the Box Geometry outside of the component prevents it from being recreated on every render
 const boxGeometry = new THREE.BoxGeometry(1, 1, 1);
@@ -35,7 +38,6 @@ export function BlockEnd({ position = [ 0, 0, 0 ] })
   model.scene.traverse((child) => {
     if (child.isMesh) {
       child.castShadow = true
-      // child.receiveShadow = true
     }
   })
 
@@ -246,7 +248,7 @@ export function Level({ count = 6, types = [BlockSpinner, BlockVertical, BlockAx
 
     for (let i = 0; i < count; i++)
     {
-      const type = types[Math.floor(Math.random() * types.length)]
+      const type = types[Math.floor(Math.random() * types.length)] // get a random block type from the types array
       blocks.push(type);
     }
     return blocks

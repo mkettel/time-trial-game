@@ -31,6 +31,7 @@ body,
   height: 100%;
   pointer-events: none;
   font-family: 'Clash Display', sans-serif;
+  font-family: 'Array', sans-serif;
 }
 
 /**
@@ -61,7 +62,7 @@ body,
   color: #fff;
   font-size: 80px;
   background: rgba(0, 0, 0, 0.333);
-  padding-top: 10px;
+  padding: 10px 0px;
   pointer-events: auto;
   cursor: pointer;
   transition: .3s all;
