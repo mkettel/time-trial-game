@@ -1,6 +1,6 @@
 /**
  * Creating a Store with Zustand
- * use for storing all data
+ *
  */
 
 import { create } from 'zustand'
