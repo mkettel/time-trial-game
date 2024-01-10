@@ -1,6 +1,6 @@
 import { RigidBody, useRapier } from "@react-three/rapier"
 import { useFrame } from "@react-three/fiber"
-import { useKeyboardControls } from "@react-three/drei"
+import { useKeyboardControls, Html } from "@react-three/drei"
 import { useRef, useEffect, useState } from "react"
 import * as THREE from "three"
 import useGame from "./stores/useGame"
@@ -92,9 +92,29 @@ export default function Player()
       }
   }, [])
 
+  const [touchControls, setTouchControls] = useState({
+    forwardTouch: false,
+    backwardTouch: false,
+    leftTouch: false,
+    rightTouch: false,
+    jumpTouch: false
+  })
+
+  const handleTouchStart = (direction) => {
+    setTouchControls(prev => ({ ...prev, [direction]: true }));
+  }
+
+  const handleTouchEnd = (direction) => {
+    setTouchControls(prev => ({ ...prev, [direction]: false }));
+  }
+
+
   useFrame((state, delta) =>
   {
     const { forward, backward, left, right } = getKeys()
+
+    // Replace keyboard control checks with touch control checks
+    const { forwardTouch, backwardTouch, leftTouch, rightTouch } = touchControls;
 
     const impulse = { x: 0, y: 0, z: 0 }
     const torque = { x: 0, y: 0, z: 0 }
@@ -102,7 +122,7 @@ export default function Player()
     const impulseStrength = 0.6 * delta
     const torqueStrength = 0.2 * delta
 
-    if (forward)
+    if (forward || forwardTouch)
     {
       impulse.z -= impulseStrength
       torque.x -= torqueStrength
@@ -191,5 +211,36 @@ export default function Player()
         <NodeToyMaterial data={rainbowShader} />
       </mesh>
     </RigidBody>
+
+    {/* <TouchCube handleTouchEnd={handleTouchEnd} handleTouchStart={handleTouchStart} bodyPosition={body.current ? body.current.translation() : { x: 0, y: 0, z: 0 }} /> */}
+
   </>
+}
+
+
+function TouchCube({ bodyPosition, handleTouchEnd, handleTouchStart }) {
+  // Create a ref for the touch cube
+  const cubeRef = useRef();
+
+  // Update the position of the touch cube on each frame
+  useFrame(() => {
+    if (cubeRef.current) {
+      cubeRef.current.position.x = (bodyPosition.x) + 0.1;
+      cubeRef.current.position.y = (bodyPosition.y);
+      cubeRef.current.position.z = (bodyPosition.z) + 0.4;
+    }
+  });
+
+  return (
+    <mesh
+      ref={cubeRef}
+      position={[ 0, 0, 0 ]}
+      onPointerDown={() => handleTouchStart('forwardTouch')}
+      onPointerUp={() => handleTouchEnd('forwardTouch')}
+      onPointerOut={() => handleTouchEnd('forwardTouch')}
+      >
+      <boxGeometry args={[ 0.2, 0.2, 0.2 ]} />
+      <meshStandardMaterial color="mediumpurple" flatShading />
+    </mesh>
+  );
 }
