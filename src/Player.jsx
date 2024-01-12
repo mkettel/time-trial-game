@@ -222,12 +222,20 @@ function TouchCube({ bodyPosition, handleTouchEnd, handleTouchStart }) {
   // Create a ref for the touch cube
   const cubeRef = useRef();
 
+  // Create a vector to store the smoothed position
+  const smoothedCubePosition = useRef(new THREE.Vector3());
+
   // Update the position of the touch cube on each frame
-  useFrame(() => {
+  useFrame((state, delta) => {
+    const cubePosition = new THREE.Vector3() // create a new vector
+    cubePosition.copy(bodyPosition) // copy the position of the ball to the vector for the cube
+    cubePosition.z += 0.4 // move the cube back
+    cubePosition.y -= 0// move the cube up
+
+    smoothedCubePosition.current.lerp(cubePosition, 5 * delta) // lerp the cube position and multiply by delta to make it smooth on all computers
+
     if (cubeRef.current) {
-      cubeRef.current.position.x = (bodyPosition.x) + 0.1;
-      cubeRef.current.position.y = (bodyPosition.y);
-      cubeRef.current.position.z = (bodyPosition.z) + 0.4;
+      cubeRef.current.position.copy(smoothedCubePosition.current);
     }
   });
 

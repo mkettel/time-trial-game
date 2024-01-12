@@ -1,4 +1,4 @@
-import { useKeyboardControls } from "@react-three/drei"
+import { useKeyboardControls, CameraControls } from "@react-three/drei"
 import useGame from "./stores/useGame"
 import { useRef, useEffect } from "react"
 import { addEffect } from "@react-three/fiber";
@@ -18,13 +18,6 @@ export default function Interface() {
   const right = useKeyboardControls((state) => state.right)
   const left = useKeyboardControls((state) => state.left)
   const jump = useKeyboardControls((state) => state.jump)
-
-  // subscribe to the touch controls and get the current state
-  const forwardTouch = useGame((state) => state.forward)
-  const backwardTouch = useGame((state) => state.backward)
-  const rightTouch = useGame((state) => state.right)
-  const leftTouch = useGame((state) => state.left)
-  const jumpTouch = useGame((state) => state.jump)
 
   // subscribe to the time and update the time
   useEffect(() =>
@@ -79,18 +72,5 @@ export default function Interface() {
             <div className={`key large ${jump ? 'active' : ''}`}></div>
         </div>
     </div>
-
-    {/* Mobile Joystick */}
-    {/* <div className="joystick">
-        <div className="stick"></div>
-        <div className="button" onTouchStart={() => handleTouchStart('jump')} onTouchEnd={() => handleTouchEnd('jump')}></div>
-        <div className="button" onTouchStart={() => handleTouchStart('forward')} onTouchEnd={() => handleTouchEnd('forward')}></div>
-        <div className="button" onTouchStart={() => handleTouchStart('backward')} onTouchEnd={() => handleTouchEnd('backward')}></div>
-        <div className="button" onTouchStart={() => handleTouchStart('left')} onTouchEnd={() => handleTouchEnd('left')}></div>
-        <div className="button" onTouchStart={() => handleTouchStart('right')} onTouchEnd={() => handleTouchEnd('right')}></div>
-    </div> */}
-
-
-
   </div>
 }
